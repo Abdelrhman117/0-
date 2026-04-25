@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: #130D05;
+    color: #F0E6D3;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #1A0F0A;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #3D2510;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #5A3F0E;
+  }
+
+  /* Native select option styling */
+  select option {
+    background-color: #1C1109;
+    color: #F0E6D3;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Print styles for invoices */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #print-invoice,
+  #print-invoice * {
+    visibility: visible;
+  }
+  #print-invoice {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+}
