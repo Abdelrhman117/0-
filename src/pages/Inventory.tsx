@@ -153,7 +153,7 @@ export default function Inventory() {
       </div>
 
       {/* Summary cards */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
         {grouped.map(({ category, items: catItems, total }) => (
           <div key={category} className="bg-surface-card border border-surface-border rounded-xl p-4">
             <p className="text-coffee-500 text-xs font-medium uppercase tracking-wider mb-2">
@@ -259,7 +259,7 @@ export default function Inventory() {
       >
         <div className="space-y-4">
           <Input label="اسم الصنف" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Ethiopian Yirgacheffe" />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Select label="الفئة" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value as InventoryCategory })}>
               <option value="raw">بن أخضر (خام)</option>
               <option value="roasted">قهوة محمصة</option>
@@ -272,7 +272,7 @@ export default function Inventory() {
               <option value="unit">unit</option>
             </Select>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input label="الكمية الحالية" type="number" min="0" step="0.1" value={form.quantity} onChange={(e) => setForm({ ...form, quantity: e.target.value })} />
             <Input label="تنبيه المخزون المنخفض عند" type="number" min="0" step="0.1" value={form.lowStockThreshold} onChange={(e) => setForm({ ...form, lowStockThreshold: e.target.value })} />
           </div>

@@ -200,7 +200,7 @@ export default function Orders() {
       {/* Create Order Modal */}
       <Modal open={modal} onClose={() => setModal(false)} title="إنشاء طلب جديد" size="xl">
         <div className="space-y-5">
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Select label="العميل" value={form.clientId} onChange={(e) => setForm({ ...form, clientId: e.target.value })}>
               <option value="">اختر العميل…</option>
               {clients.map((c) => <option key={c.id} value={c.id}>{c.name} ({c.type === 'export' ? 'تصدير' : 'محلي'})</option>)}
@@ -224,28 +224,36 @@ export default function Orders() {
 
             <div className="space-y-2">
               {orderItems.map((item) => (
-                <div key={item.tempId} className="grid grid-cols-12 gap-2 items-center bg-coffee-950 border border-surface-border rounded-lg p-3">
-                  <div className="col-span-4">
+                <div key={item.tempId} className="bg-coffee-950 border border-surface-border rounded-lg p-3">
+                  {/* Mobile: stacked; Desktop: row */}
+                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center">
+                  <div className="sm:col-span-5">
                     <Select value={item.inventoryItemId ?? ''} onChange={(e) => updateItem(item.tempId!, 'inventoryItemId', e.target.value)}>
                       <option value="">اختر الصنف…</option>
                       {roastedItems.map((i) => <option key={i.id} value={i.id}>{i.name} ({i.quantity} كجم)</option>)}
                     </Select>
                   </div>
-                  <div className="col-span-3">
+                  <div className="sm:col-span-3">
                     <Input type="number" min="0" step="0.1" placeholder="الكمية (كجم)" value={item.quantityKg || ''} onChange={(e) => updateItem(item.tempId!, 'quantityKg', parseFloat(e.target.value) || 0)} />
                   </div>
-                  <div className="col-span-3">
+                  <div className="sm:col-span-3">
                     <Input type="number" min="0" step="0.01" placeholder="سعر/كجم" value={item.pricePerKg || ''} onChange={(e) => updateItem(item.tempId!, 'pricePerKg', parseFloat(e.target.value) || 0)} />
                   </div>
-                  <div className="col-span-1 text-coffee-300 font-bold text-xs text-center">
-                    {(item.subtotal ?? 0).toFixed(0)}
+                  <div className="sm:col-span-1 flex items-center justify-between sm:justify-center">
+                    <span className="text-coffee-300 font-bold text-xs">{(item.subtotal ?? 0).toFixed(0)}</span>
+                    {orderItems.length > 1 && (
+                      <button onClick={() => removeItem(item.tempId!)} className="sm:hidden text-coffee-700 hover:text-red-400 transition-colors">
+                        <X size={14} />
+                      </button>
+                    )}
                   </div>
-                  <div className="col-span-1 text-left">
+                  <div className="hidden sm:block sm:col-span-1 text-left">
                     {orderItems.length > 1 && (
                       <button onClick={() => removeItem(item.tempId!)} className="text-coffee-700 hover:text-red-400 transition-colors">
                         <X size={14} />
                       </button>
                     )}
+                  </div>
                   </div>
                 </div>
               ))}
@@ -253,7 +261,7 @@ export default function Orders() {
           </div>
 
           {/* Totals */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Textarea label="ملاحظات (اختياري)" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder="ملاحظات الطلب…" />
             <div className="space-y-2">
               <div className="grid grid-cols-2 gap-3">

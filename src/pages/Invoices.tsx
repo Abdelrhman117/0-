@@ -83,7 +83,7 @@ export default function Invoices() {
   return (
     <div className="space-y-6">
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {[
           { label: 'إجمالي الفواتير',   value: invoices.length,                    sub: `${paidCount} مدفوعة`,          color: 'text-coffee-100' },
           { label: 'إجمالي المحصّل',    value: `$${totalCollected.toLocaleString()}`, sub: 'المبالغ المستلمة',            color: 'text-green-400'  },
@@ -210,7 +210,7 @@ export default function Invoices() {
             </div>
 
             {/* Items */}
-            <table className="w-full text-sm">
+            <div className="overflow-x-auto"><table className="w-full text-sm min-w-[300px]">
               <thead><tr className="border-b border-surface-border"><th className="text-right text-coffee-500 text-xs py-2 px-2">الصنف</th><th className="text-left text-coffee-500 text-xs py-2">الوزن</th><th className="text-left text-coffee-500 text-xs py-2">السعر/كجم</th><th className="text-left text-coffee-500 text-xs py-2">المجموع</th></tr></thead>
               <tbody>
                 {selectedInvoice.items.map((item, i) => (
@@ -222,10 +222,10 @@ export default function Invoices() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
 
             {/* Totals */}
-            <div className="mr-auto w-64 space-y-1.5 text-sm border-t border-surface-border pt-3">
+            <div className="w-full sm:w-64 sm:mr-auto space-y-1.5 text-sm border-t border-surface-border pt-3">
               <div className="flex justify-between text-coffee-500"><span>المجموع الفرعي</span><span>{selectedInvoice.currency} {selectedInvoice.subtotal.toFixed(2)}</span></div>
               {selectedInvoice.discount > 0 && <div className="flex justify-between text-red-400"><span>الخصم</span><span>- {selectedInvoice.currency} {selectedInvoice.discount.toFixed(2)}</span></div>}
               {selectedInvoice.tax > 0 && <div className="flex justify-between text-coffee-500"><span>الضريبة ({selectedInvoice.tax}%)</span><span>{selectedInvoice.currency} {(selectedInvoice.subtotal * selectedInvoice.tax / 100).toFixed(2)}</span></div>}

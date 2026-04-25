@@ -262,7 +262,7 @@ export default function Dashboard() {
             {orders.length === 0 ? (
               <div className="py-10 text-center text-coffee-600 text-sm">لا توجد طلبات</div>
             ) : (
-              <table className="w-full text-sm">
+              <div className="overflow-x-auto"><table className="w-full text-sm min-w-[360px]">
                 <thead>
                   <tr className="border-b border-surface-border">
                     <th className="text-left text-coffee-500 text-xs font-medium px-5 py-2.5">الطلب</th>
@@ -285,7 +285,7 @@ export default function Dashboard() {
                     </tr>
                   ))}
                 </tbody>
-              </table>
+              </table></div>
             )}
           </CardBody>
         </Card>
@@ -302,7 +302,7 @@ export default function Dashboard() {
             {batches.length === 0 ? (
               <div className="py-10 text-center text-coffee-600 text-sm">لا توجد دُفعات</div>
             ) : (
-              <table className="w-full text-sm">
+              <div className="overflow-x-auto"><table className="w-full text-sm min-w-[320px]">
                 <thead>
                   <tr className="border-b border-surface-border">
                     <th className="text-left text-coffee-500 text-xs font-medium px-5 py-2.5">الدُفعة</th>
@@ -323,7 +323,7 @@ export default function Dashboard() {
                     </tr>
                   ))}
                 </tbody>
-              </table>
+              </table></div>
             )}
           </CardBody>
         </Card>

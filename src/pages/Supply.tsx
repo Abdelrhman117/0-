@@ -250,11 +250,11 @@ export default function Supply() {
             <option value="">اختر صنفًا...</option>
             {rawInventory.map((i) => <option key={i.id} value={i.id}>{i.name}</option>)}
           </Select>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input label="الوزن (كجم)" type="number" min="0" step="0.1" value={shipForm.weightKg} onChange={(e) => setShipForm({ ...shipForm, weightKg: e.target.value })} />
             <Input label="التكلفة لكل كجم" type="number" min="0" step="0.01" value={shipForm.costPerKg} onChange={(e) => setShipForm({ ...shipForm, costPerKg: e.target.value })} />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Select label="العملة" value={shipForm.currency} onChange={(e) => setShipForm({ ...shipForm, currency: e.target.value })}>
               <option value="EGP">EGP — جنيه مصري</option>
               <option value="USD">USD — دولار</option>
@@ -285,7 +285,7 @@ export default function Supply() {
         <div className="space-y-4">
           <Input label="اسم الشركة" value={supForm.name} onChange={(e) => setSupForm({ ...supForm, name: e.target.value })} placeholder="e.g. Ethiopian Coffee Exports" />
           <Input label="البلد" value={supForm.country} onChange={(e) => setSupForm({ ...supForm, country: e.target.value })} placeholder="e.g. Ethiopia" />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input label="اسم المسؤول (اختياري)" value={supForm.contactName} onChange={(e) => setSupForm({ ...supForm, contactName: e.target.value })} />
             <Input label="الهاتف (اختياري)" value={supForm.phone} onChange={(e) => setSupForm({ ...supForm, phone: e.target.value })} />
           </div>

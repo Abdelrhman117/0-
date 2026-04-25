@@ -1,7 +1,11 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { Bell, Search } from 'lucide-react';
+import { Bell, Search, Menu } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+
+interface HeaderProps {
+  onMenuClick?: () => void;
+}
 
 const routeTitles: Record<string, string> = {
   '/':          'لوحة التحكم',
@@ -13,7 +17,7 @@ const routeTitles: Record<string, string> = {
   '/invoices':  'الفواتير',
 };
 
-export default function Header() {
+export default function Header({ onMenuClick }: HeaderProps) {
   const { pathname } = useLocation();
   const { user }     = useAuth();
   const title        = routeTitles[pathname] ?? 'لوحة التحكم';
@@ -23,15 +27,25 @@ export default function Header() {
     : 'U';
 
   return (
-    <header className="h-14 flex items-center justify-between px-6 bg-coffee-950/80 backdrop-blur border-b border-surface-border flex-shrink-0">
-      <h1 className="text-coffee-100 font-semibold text-lg">{title}</h1>
-
+    <header className="h-14 flex items-center justify-between px-4 sm:px-6 bg-coffee-950/80 backdrop-blur border-b border-surface-border flex-shrink-0">
       <div className="flex items-center gap-3">
+        {/* Hamburger — mobile only */}
+        <button
+          onClick={onMenuClick}
+          className="p-1.5 rounded-lg text-coffee-600 hover:bg-surface-hover hover:text-coffee-300 transition-colors lg:hidden"
+          aria-label="فتح القائمة"
+        >
+          <Menu size={20} />
+        </button>
+        <h1 className="text-coffee-100 font-semibold text-base sm:text-lg">{title}</h1>
+      </div>
+
+      <div className="flex items-center gap-2 sm:gap-3">
         <div className="relative hidden sm:block">
           <Search size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-coffee-600" />
           <input
             placeholder="بحث سريع…"
-            className="pr-9 pl-4 py-1.5 bg-surface-card border border-surface-border rounded-lg text-sm text-coffee-200 placeholder-coffee-700 focus:outline-none focus:border-coffee-500 w-52"
+            className="pr-9 pl-4 py-1.5 bg-surface-card border border-surface-border rounded-lg text-sm text-coffee-200 placeholder-coffee-700 focus:outline-none focus:border-coffee-500 w-40 md:w-52"
           />
         </div>
 

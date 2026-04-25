@@ -99,7 +99,7 @@ export default function Clients() {
   return (
     <div className="space-y-6">
       {/* Summary bar */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {[
           { label: 'إجمالي العملاء',      value: clients.length,              sub: `${clients.filter((c) => c.type === 'local').length} محلي · ${clients.filter((c) => c.type === 'export').length} تصدير` },
           { label: 'الرصيد المستحق',      value: `${totalBalance.toLocaleString()} ج.م`, sub: 'إجمالي غير المدفوع' },
@@ -205,7 +205,7 @@ export default function Clients() {
       <Modal open={modal} onClose={() => setModal(false)} title={editId ? 'تعديل بيانات العميل' : 'إضافة عميل جديد'}>
         <div className="space-y-4">
           <Input label="اسم العميل / الشركة" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="مثال: شركة الجزيرة للقهوة" />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Select label="نوع العميل" value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value as ClientType })}>
               <option value="local">محلي</option>
               <option value="export">تصدير</option>
@@ -213,7 +213,7 @@ export default function Clients() {
             <Input label="البلد" value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })} placeholder="مثال: المملكة العربية السعودية" />
           </div>
           <Input label="اسم المسؤول (اختياري)" value={form.contactName} onChange={(e) => setForm({ ...form, contactName: e.target.value })} />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input label="البريد الإلكتروني" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
             <Input label="الهاتف" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
           </div>

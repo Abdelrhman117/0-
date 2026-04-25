@@ -252,7 +252,7 @@ export default function Roasting() {
 
           {/* Live calculation preview */}
           {roastedPreview && (
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div className="px-4 py-3 bg-coffee-950 border border-surface-border rounded-lg text-center">
                 <p className="text-coffee-500 text-xs mb-1">المدخل الخام</p>
                 <p className="text-coffee-200 font-bold">{form.rawWeightKg} kg</p>
@@ -268,7 +268,7 @@ export default function Roasting() {
             </div>
           )}
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Input label="الحرارة (°م)" type="number" value={form.temperatureC} onChange={(e) => setForm({ ...form, temperatureC: e.target.value })} />
             <Input label="المدة (دقيقة)" type="number" value={form.durationMin} onChange={(e) => setForm({ ...form, durationMin: e.target.value })} />
             <Input label="اسم المحمص" value={form.roasterName} onChange={(e) => setForm({ ...form, roasterName: e.target.value })} placeholder="e.g. Ahmed" />

@@ -16,6 +16,10 @@ import {
 import { useAuth } from '../../contexts/AuthContext';
 import toast from 'react-hot-toast';
 
+interface SidebarProps {
+  onClose?: () => void;
+}
+
 const navItems = [
   { to: '/',          label: 'لوحة التحكم', icon: LayoutDashboard },
   { to: '/inventory', label: 'المخزون',      icon: Package         },
@@ -26,7 +30,7 @@ const navItems = [
   { to: '/invoices',  label: 'الفواتير',     icon: FileText        },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ onClose }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const { signOut } = useAuth();
   const navigate    = useNavigate();
@@ -42,7 +46,7 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`relative flex flex-col bg-coffee-950 border-l border-surface-border transition-all duration-300 ${
+      className={`relative flex flex-col h-full bg-coffee-950 border-l border-surface-border transition-all duration-300 ${
         collapsed ? 'w-16' : 'w-60'
       }`}
     >
@@ -68,6 +72,7 @@ export default function Sidebar() {
             key={to}
             to={to}
             end={to === '/'}
+            onClick={onClose}
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-2.5 mx-2 mb-0.5 rounded-lg text-sm font-medium transition-all ${
                 isActive
@@ -93,10 +98,10 @@ export default function Sidebar() {
         </button>
       </div>
 
-      {/* Collapse toggle — on the LEFT edge (interior) because sidebar is on RIGHT in RTL */}
+      {/* Collapse toggle — desktop only */}
       <button
         onClick={() => setCollapsed(!collapsed)}
-        className="absolute -left-3 top-20 w-6 h-6 rounded-full bg-surface-border border border-coffee-800 text-coffee-400 flex items-center justify-center hover:bg-coffee-800 transition-colors z-10"
+        className="absolute -left-3 top-20 w-6 h-6 rounded-full bg-surface-border border border-coffee-800 text-coffee-400 hidden lg:flex items-center justify-center hover:bg-coffee-800 transition-colors z-10"
       >
         {collapsed ? <ChevronLeft size={12} /> : <ChevronRight size={12} />}
       </button>
