@@ -1,7 +1,44 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+
+class ErrorBoundary extends Component<
+  { children: React.ReactNode },
+  { error: Error | null }
+> {
+  state = { error: null };
+
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+
+  render() {
+    if (this.state.error) {
+      return (
+        <div className="min-h-screen bg-coffee-950 flex items-center justify-center p-6">
+          <div className="max-w-md w-full text-center">
+            <div className="w-16 h-16 rounded-2xl bg-red-900/20 border border-red-700/30 flex items-center justify-center mx-auto mb-4">
+              <span className="text-red-400 text-2xl font-bold">!</span>
+            </div>
+            <h2 className="text-coffee-100 font-bold text-xl mb-2">Something went wrong</h2>
+            <p className="text-coffee-500 text-sm mb-2">{(this.state.error as Error).message}</p>
+            <p className="text-coffee-700 text-xs mb-6">
+              Make sure your Firebase Console has Authentication (Email/Password) and Firestore enabled.
+            </p>
+            <button
+              onClick={() => { this.setState({ error: null }); window.location.reload(); }}
+              className="px-4 py-2 bg-coffee-300 text-coffee-950 font-semibold rounded-lg hover:bg-coffee-200 text-sm"
+            >
+              Reload App
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 import Layout    from './components/layout/Layout';
 import Login     from './pages/Login';
@@ -68,27 +105,29 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <AppRoutes />
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            style: {
-              background: '#251609',
-              color:      '#F0E6D3',
-              border:     '1px solid #3D2510',
-              fontSize:   '13px',
-            },
-            success: {
-              iconTheme: { primary: '#D4A843', secondary: '#251609' },
-            },
-            error: {
-              iconTheme: { primary: '#EF4444', secondary: '#251609' },
-            },
-          }}
-        />
-      </BrowserRouter>
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <BrowserRouter>
+          <AppRoutes />
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              style: {
+                background: '#251609',
+                color:      '#F0E6D3',
+                border:     '1px solid #3D2510',
+                fontSize:   '13px',
+              },
+              success: {
+                iconTheme: { primary: '#D4A843', secondary: '#251609' },
+              },
+              error: {
+                iconTheme: { primary: '#EF4444', secondary: '#251609' },
+              },
+            }}
+          />
+        </BrowserRouter>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
