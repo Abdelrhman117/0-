@@ -21,10 +21,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => {
-      setUser(u);
-      setLoading(false);
-    });
+    const unsub = onAuthStateChanged(
+      auth,
+      (u)   => { setUser(u); setLoading(false); },
+      (err) => { console.error('Auth state error:', err); setLoading(false); },
+    );
     return unsub;
   }, []);
 
