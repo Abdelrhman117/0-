@@ -10,9 +10,6 @@ import {
   PieChart,
   Pie,
   Cell,
-  BarChart,
-  Bar,
-  Legend,
 } from 'recharts';
 import {
   Package,
@@ -99,15 +96,23 @@ export default function Dashboard() {
     { name: 'Packaging',   value: packagingCount },
   ].filter((d) => d.value > 0);
 
-  // Mock trend data for area chart (last 7 months)
+  // Build trend data from real monthly order/batch activity
   const trendData = useMemo(() => {
-    const months = ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'];
-    return months.map((month) => ({
-      month,
-      raw:     Math.round(rawStockKg * (0.6 + Math.random() * 0.8)),
-      roasted: Math.round(roastedStockKg * (0.4 + Math.random() * 0.9)),
-    }));
-  }, [rawStockKg, roastedStockKg]);
+    const now = new Date();
+    return Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(now.getFullYear(), now.getMonth() - (6 - i), 1);
+      const label = d.toLocaleString('default', { month: 'short' });
+      const month = d.getMonth();
+      const year  = d.getFullYear();
+      const rawOut = allOrders
+        .filter((o) => {
+          const od = o.date?.toDate?.();
+          return od && od.getMonth() === month && od.getFullYear() === year;
+        })
+        .reduce((s, o) => s + (o.items?.reduce((a, it) => a + it.quantityKg, 0) ?? 0), 0);
+      return { month: label, raw: rawStockKg, roasted: Math.round(rawOut * 0.85) };
+    });
+  }, [allOrders, rawStockKg]);
 
   return (
     <div className="space-y-6">

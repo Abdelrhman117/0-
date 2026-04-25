@@ -34,13 +34,21 @@ export default function Roasting() {
   const rawItems     = useMemo(() => inventory.filter((i) => i.category === 'raw'),     [inventory]);
   const roastedItems = useMemo(() => inventory.filter((i) => i.category === 'roasted'), [inventory]);
 
-  const [modal, setModal]   = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [form, setForm]     = useState({
-    rawItemId: '', roastedItemId: '', rawWeightKg: '', roastProfile: 'medium' as const,
+  type RoastProfile = 'light' | 'medium' | 'medium-dark' | 'dark';
+  interface RoastForm {
+    rawItemId: string; roastedItemId: string; rawWeightKg: string;
+    roastProfile: RoastProfile; temperatureC: string; durationMin: string;
+    roasterName: string; notes: string; date: string;
+  }
+  const defaultForm: RoastForm = {
+    rawItemId: '', roastedItemId: '', rawWeightKg: '', roastProfile: 'medium',
     temperatureC: '220', durationMin: '15', roasterName: '', notes: '',
     date: new Date().toISOString().split('T')[0],
-  });
+  };
+
+  const [modal, setModal]   = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [form, setForm]     = useState<RoastForm>(defaultForm);
 
   const selectedRawItem     = rawItems.find((i) => i.id === form.rawItemId);
   const selectedRoastedItem = roastedItems.find((i) => i.id === form.roastedItemId);
@@ -65,7 +73,7 @@ export default function Roasting() {
         roastedItemId:   form.roastedItemId,
         roastedItemName: selectedRoastedItem?.name ?? '',
         rawWeightKg:     parseFloat(form.rawWeightKg),
-        roastProfile:    form.roastProfile as any,
+        roastProfile:    form.roastProfile,
         temperatureC:    parseFloat(form.temperatureC) || 220,
         durationMin:     parseFloat(form.durationMin) || 15,
         roasterName:     form.roasterName,
@@ -73,6 +81,7 @@ export default function Roasting() {
         date:            new Date(form.date),
       });
       toast.success(`Batch ${result.batchNumber} logged! ${result.roastedWeightKg} kg roasted.`);
+      setForm(defaultForm);
       setModal(false);
     } catch (e: any) {
       toast.error(e.message);
@@ -227,7 +236,7 @@ export default function Roasting() {
                 <button
                   key={p.value}
                   type="button"
-                  onClick={() => setForm({ ...form, roastProfile: p.value as any })}
+                  onClick={() => setForm({ ...form, roastProfile: p.value as RoastProfile })}
                   className={`px-3 py-3 rounded-xl border text-xs font-medium text-center transition-all ${
                     form.roastProfile === p.value
                       ? 'border-coffee-300/50 bg-coffee-300/10 text-coffee-200'
