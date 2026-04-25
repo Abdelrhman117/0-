@@ -3,9 +3,108 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Only authenticated users can read/write anything
-    match /{document=**} {
-      allow read, write: if request.auth != null;
+    // ── Helper functions ──────────────────────────────────────────────────────
+
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    function incomingData() {
+      return request.resource.data;
+    }
+
+    function hasFields(fields) {
+      return incomingData().keys().hasAll(fields);
+    }
+
+    function isPositiveNumber(field) {
+      return incomingData()[field] is number && incomingData()[field] >= 0;
+    }
+
+    // ── Inventory ─────────────────────────────────────────────────────────────
+    match /inventory/{itemId} {
+      allow read: if isAuth();
+      allow create: if isAuth()
+        && hasFields(['name', 'category', 'quantity', 'unit', 'lowStockThreshold'])
+        && incomingData().category in ['raw', 'roasted', 'packaging']
+        && isPositiveNumber('quantity')
+        && isPositiveNumber('lowStockThreshold');
+      allow update: if isAuth()
+        && incomingData().category in ['raw', 'roasted', 'packaging'];
+      allow delete: if isAuth();
+    }
+
+    // ── Suppliers ─────────────────────────────────────────────────────────────
+    match /suppliers/{supplierId} {
+      allow read: if isAuth();
+      allow create: if isAuth()
+        && hasFields(['name', 'country']);
+      allow update: if isAuth();
+      allow delete: if isAuth();
+    }
+
+    // ── Supply Shipments ──────────────────────────────────────────────────────
+    match /supply_shipments/{shipmentId} {
+      allow read: if isAuth();
+      allow create: if isAuth()
+        && hasFields(['supplierId', 'inventoryItemId', 'weightKg', 'costPerKg', 'totalCost'])
+        && isPositiveNumber('weightKg')
+        && isPositiveNumber('costPerKg')
+        && isPositiveNumber('totalCost');
+      // Shipments are immutable once created
+      allow update: if false;
+      allow delete: if isAuth();
+    }
+
+    // ── Roasting Batches ──────────────────────────────────────────────────────
+    match /roasting_batches/{batchId} {
+      allow read: if isAuth();
+      allow create: if isAuth()
+        && hasFields(['batchNumber', 'rawItemId', 'roastedItemId', 'rawWeightKg', 'roastedWeightKg'])
+        && isPositiveNumber('rawWeightKg')
+        && isPositiveNumber('roastedWeightKg')
+        && incomingData().roastProfile in ['light', 'medium', 'medium-dark', 'dark'];
+      // Batches are immutable once created
+      allow update: if false;
+      allow delete: if isAuth();
+    }
+
+    // ── Clients ───────────────────────────────────────────────────────────────
+    match /clients/{clientId} {
+      allow read: if isAuth();
+      allow create: if isAuth()
+        && hasFields(['name', 'type', 'country'])
+        && incomingData().type in ['local', 'export'];
+      allow update: if isAuth();
+      allow delete: if isAuth();
+    }
+
+    // ── Orders ────────────────────────────────────────────────────────────────
+    match /orders/{orderId} {
+      allow read: if isAuth();
+      allow create: if isAuth()
+        && hasFields(['orderNumber', 'clientId', 'clientName', 'items', 'total', 'status'])
+        && isPositiveNumber('total')
+        && incomingData().status in ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'];
+      allow update: if isAuth()
+        // Only allow status and notes to be changed after creation
+        && (!incomingData().diff(resource.data).affectedKeys()
+            .hasAny(['orderNumber', 'clientId', 'items', 'total', 'subtotal']));
+      allow delete: if isAuth();
+    }
+
+    // ── Invoices ──────────────────────────────────────────────────────────────
+    match /invoices/{invoiceId} {
+      allow read: if isAuth();
+      allow create: if isAuth()
+        && hasFields(['invoiceNumber', 'orderId', 'clientId', 'total', 'status'])
+        && isPositiveNumber('total')
+        && incomingData().status in ['unpaid', 'partial', 'paid'];
+      allow update: if isAuth()
+        // Only allow payment-related fields to change
+        && (!incomingData().diff(resource.data).affectedKeys()
+            .hasAny(['invoiceNumber', 'orderId', 'clientId', 'total', 'items']));
+      allow delete: if isAuth();
     }
   }
 }
