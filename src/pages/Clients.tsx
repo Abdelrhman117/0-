@@ -75,7 +75,7 @@ export default function Clients() {
     setSaving(true);
     try {
       await recordPayment(payModal.id, amount);
-      toast.success(`تم تسجيل دفعة بقيمة $${amount.toLocaleString()}`);
+      toast.success(`تم تسجيل دفعة بقيمة ${amount.toLocaleString()} ج.م`);
       setPayModal(null);
       setPayAmount('');
     } catch (e: any) {
@@ -102,7 +102,7 @@ export default function Clients() {
       <div className="grid grid-cols-3 gap-4">
         {[
           { label: 'إجمالي العملاء',      value: clients.length,              sub: `${clients.filter((c) => c.type === 'local').length} محلي · ${clients.filter((c) => c.type === 'export').length} تصدير` },
-          { label: 'الرصيد المستحق',      value: `$${totalBalance.toLocaleString()}`, sub: 'إجمالي غير المدفوع' },
+          { label: 'الرصيد المستحق',      value: `${totalBalance.toLocaleString()} ج.م`, sub: 'إجمالي غير المدفوع' },
           { label: 'إجمالي الحجم المتداول', value: `${totalVolume.toFixed(1)} كجم`, sub: 'طوال الوقت' },
         ].map(({ label, value, sub }) => (
           <div key={label} className="bg-surface-card border border-surface-border rounded-xl p-4">
@@ -181,7 +181,7 @@ export default function Clients() {
                   <div className="text-center">
                     <p className="text-coffee-600 text-[10px] mb-0.5">الرصيد</p>
                     <p className={`font-bold text-sm ${client.balance > 0 ? 'text-amber-400' : 'text-green-400'}`}>
-                      ${client.balance.toLocaleString()}
+                      {client.balance.toLocaleString()} ج.م
                     </p>
                   </div>
                 </div>
@@ -233,9 +233,9 @@ export default function Clients() {
               <p className="text-coffee-500 text-xs mb-1">العميل</p>
               <p className="text-coffee-100 font-semibold">{payModal.name}</p>
               <p className="text-coffee-500 text-xs mt-2 mb-1">الرصيد المستحق</p>
-              <p className="text-amber-400 text-xl font-bold">${payModal.balance.toLocaleString()}</p>
+              <p className="text-amber-400 text-xl font-bold">{payModal.balance.toLocaleString()} ج.م</p>
             </div>
-            <Input label="مبلغ الدفعة (USD)" type="number" min="0" step="0.01" value={payAmount} onChange={(e) => setPayAmount(e.target.value)} placeholder="0.00" />
+            <Input label="مبلغ الدفعة (ج.م)" type="number" min="0" step="0.01" value={payAmount} onChange={(e) => setPayAmount(e.target.value)} placeholder="0.00" />
             <div className="flex justify-start gap-3">
               <Button loading={saving} icon={<DollarSign size={14} />} onClick={handlePayment}>تسجيل الدفعة</Button>
               <Button variant="secondary" onClick={() => setPayModal(null)}>إلغاء</Button>

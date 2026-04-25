@@ -28,7 +28,7 @@ export default function Supply() {
   const [search, setSearch]                  = useState('');
 
   const [shipForm, setShipForm] = useState({
-    supplierId: '', inventoryItemId: '', weightKg: '', costPerKg: '', currency: 'USD', date: new Date().toISOString().split('T')[0], notes: '',
+    supplierId: '', inventoryItemId: '', weightKg: '', costPerKg: '', currency: 'EGP', date: new Date().toISOString().split('T')[0], notes: '',
   });
 
   const [supForm, setSupForm] = useState({
@@ -41,7 +41,7 @@ export default function Supply() {
   );
 
   const openNewShipment = () => {
-    setShipForm({ supplierId: '', inventoryItemId: '', weightKg: '', costPerKg: '', currency: 'USD', date: new Date().toISOString().split('T')[0], notes: '' });
+    setShipForm({ supplierId: '', inventoryItemId: '', weightKg: '', costPerKg: '', currency: 'EGP', date: new Date().toISOString().split('T')[0], notes: '' });
     setShipmentModal(true);
   };
 
@@ -256,10 +256,11 @@ export default function Supply() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <Select label="العملة" value={shipForm.currency} onChange={(e) => setShipForm({ ...shipForm, currency: e.target.value })}>
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-              <option value="SAR">SAR</option>
-              <option value="AED">AED</option>
+              <option value="EGP">EGP — جنيه مصري</option>
+              <option value="USD">USD — دولار</option>
+              <option value="EUR">EUR — يورو</option>
+              <option value="SAR">SAR — ريال سعودي</option>
+              <option value="AED">AED — درهم إماراتي</option>
             </Select>
             <Input label="التاريخ" type="date" value={shipForm.date} onChange={(e) => setShipForm({ ...shipForm, date: e.target.value })} />
           </div>

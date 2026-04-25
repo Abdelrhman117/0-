@@ -158,10 +158,10 @@ export default function Dashboard() {
         <StatCard
           label="الإيراد الشهري"
           value={monthlyRevenue.toLocaleString()}
-          unit="USD"
+          unit="ج.م"
           icon={DollarSign}
           color="green"
-          sublabel={`غير مدفوع: $${unpaidInvoices.toLocaleString()}`}
+          sublabel={`غير مدفوع: ${unpaidInvoices.toLocaleString()} ج.م`}
         />
       </div>
 

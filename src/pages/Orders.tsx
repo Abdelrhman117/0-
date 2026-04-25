@@ -37,7 +37,7 @@ export default function Orders() {
   const [detailOrder, setDetailOrder]   = useState<Order | null>(null);
 
   const [form, setForm] = useState({
-    clientId: '', discount: '0', tax: '0', currency: 'USD',
+    clientId: '', discount: '0', tax: '0', currency: 'EGP',
     notes: '', date: new Date().toISOString().split('T')[0],
   });
   const [orderItems, setOrderItems] = useState<Partial<OrderItem & { tempId: string }>[]>([
@@ -95,7 +95,7 @@ export default function Orders() {
       toast.success(`تم إنشاء الطلب ${result.orderNumber} وتم إنشاء الفاتورة تلقائياً`);
       setModal(false);
       setOrderItems([{ tempId: crypto.randomUUID(), inventoryItemId: '', itemName: '', quantityKg: 0, pricePerKg: 0, subtotal: 0 }]);
-      setForm({ clientId: '', discount: '0', tax: '0', currency: 'USD', notes: '', date: new Date().toISOString().split('T')[0] });
+      setForm({ clientId: '', discount: '0', tax: '0', currency: 'EGP', notes: '', date: new Date().toISOString().split('T')[0] });
     } catch (e: any) {
       toast.error(e.message);
     } finally {
@@ -206,10 +206,11 @@ export default function Orders() {
               {clients.map((c) => <option key={c.id} value={c.id}>{c.name} ({c.type === 'export' ? 'تصدير' : 'محلي'})</option>)}
             </Select>
             <Select label="العملة" value={form.currency} onChange={(e) => setForm({ ...form, currency: e.target.value })}>
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-              <option value="SAR">SAR</option>
-              <option value="AED">AED</option>
+              <option value="EGP">EGP — جنيه مصري</option>
+              <option value="USD">USD — دولار</option>
+              <option value="EUR">EUR — يورو</option>
+              <option value="SAR">SAR — ريال سعودي</option>
+              <option value="AED">AED — درهم إماراتي</option>
             </Select>
             <Input label="تاريخ الطلب" type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
           </div>
