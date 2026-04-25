@@ -21,8 +21,8 @@ export default function Login() {
       navigate('/');
     } catch (err: any) {
       const msg = err.code === 'auth/invalid-credential'
-        ? 'Invalid email or password'
-        : err.message ?? 'Sign-in failed';
+        ? 'البريد الإلكتروني أو كلمة المرور غير صحيحة'
+        : 'فشل تسجيل الدخول، يرجى المحاولة مجدداً';
       toast.error(msg);
     } finally {
       setLoading(false);
@@ -33,8 +33,8 @@ export default function Login() {
     <div className="min-h-screen bg-coffee-950 flex items-center justify-center p-4">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-coffee-300/5 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-coffee-600/5 blur-3xl" />
+        <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-coffee-300/5 blur-3xl" />
+        <div className="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-coffee-600/5 blur-3xl" />
       </div>
 
       <div className="relative w-full max-w-sm">
@@ -46,30 +46,31 @@ export default function Login() {
               <Coffee size={28} className="text-coffee-300" />
             </div>
             <h1 className="text-coffee-100 text-2xl font-bold tracking-tight">
-              0<span className="text-coffee-300">%</span> Coffee
+              0<span className="text-coffee-300">%</span> قهوة
             </h1>
-            <p className="text-coffee-500 text-sm mt-1">Management System</p>
+            <p className="text-coffee-500 text-sm mt-1">نظام إدارة القهوة</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex flex-col gap-1">
               <label className="text-xs font-medium text-coffee-400 uppercase tracking-wider">
-                Email
+                البريد الإلكتروني
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@zeropercentcoffee.com"
+                placeholder="admin@zeropercent.com"
                 required
                 autoComplete="email"
-                className="w-full px-4 py-2.5 bg-coffee-950 border border-surface-border rounded-lg text-sm text-coffee-100 placeholder-coffee-700 focus:outline-none focus:border-coffee-500 focus:ring-1 focus:ring-coffee-500/30 transition-colors"
+                dir="ltr"
+                className="w-full px-4 py-2.5 bg-coffee-950 border border-surface-border rounded-lg text-sm text-coffee-100 placeholder-coffee-700 focus:outline-none focus:border-coffee-500 focus:ring-1 focus:ring-coffee-500/30 transition-colors text-left"
               />
             </div>
 
             <div className="flex flex-col gap-1">
               <label className="text-xs font-medium text-coffee-400 uppercase tracking-wider">
-                Password
+                كلمة المرور
               </label>
               <div className="relative">
                 <input
@@ -79,12 +80,13 @@ export default function Login() {
                   placeholder="••••••••"
                   required
                   autoComplete="current-password"
-                  className="w-full px-4 py-2.5 pr-10 bg-coffee-950 border border-surface-border rounded-lg text-sm text-coffee-100 placeholder-coffee-700 focus:outline-none focus:border-coffee-500 focus:ring-1 focus:ring-coffee-500/30 transition-colors"
+                  dir="ltr"
+                  className="w-full px-4 py-2.5 pl-10 bg-coffee-950 border border-surface-border rounded-lg text-sm text-coffee-100 placeholder-coffee-700 focus:outline-none focus:border-coffee-500 focus:ring-1 focus:ring-coffee-500/30 transition-colors text-left"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPwd(!showPwd)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-coffee-600 hover:text-coffee-300 transition-colors"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-coffee-600 hover:text-coffee-300 transition-colors"
                 >
                   {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -99,21 +101,21 @@ export default function Login() {
               {loading ? (
                 <>
                   <Loader2 size={16} className="animate-spin" />
-                  Signing in…
+                  جاري تسجيل الدخول…
                 </>
               ) : (
-                'Sign In'
+                'تسجيل الدخول'
               )}
             </button>
           </form>
 
           <p className="text-center text-coffee-700 text-xs mt-6">
-            Authorized personnel only
+            للمستخدمين المصرح لهم فقط
           </p>
         </div>
 
         <p className="text-center text-coffee-800 text-xs mt-4">
-          © 2024 0% Coffee — All rights reserved
+          © 2024 0% قهوة — جميع الحقوق محفوظة
         </p>
       </div>
     </div>

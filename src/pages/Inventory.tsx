@@ -13,9 +13,9 @@ import EmptyState from '../components/ui/EmptyState';
 import toast from 'react-hot-toast';
 
 const CATEGORY_LABELS: Record<InventoryCategory, string> = {
-  raw:       'Green Beans (Raw)',
-  roasted:   'Roasted Coffee',
-  packaging: 'Packaging Materials',
+  raw:       'بن أخضر (خام)',
+  roasted:   'قهوة محمصة',
+  packaging: 'مستلزمات التغليف',
 };
 
 const CATEGORY_COLORS: Record<InventoryCategory, string> = {
@@ -81,7 +81,7 @@ export default function Inventory() {
   };
 
   const handleSave = async () => {
-    if (!form.name.trim()) { toast.error('Name is required'); return; }
+    if (!form.name.trim()) { toast.error('الاسم مطلوب'); return; }
     setSaving(true);
     try {
       const payload = {
@@ -95,10 +95,10 @@ export default function Inventory() {
       };
       if (editId) {
         await updateInventoryItem(editId, payload);
-        toast.success('Item updated');
+        toast.success('تم تحديث الصنف');
       } else {
         await addInventoryItem(payload);
-        toast.success('Item added');
+        toast.success('تم إضافة الصنف');
       }
       setModalOpen(false);
     } catch (e: any) {
@@ -111,7 +111,7 @@ export default function Inventory() {
   const handleDelete = async (id: string) => {
     try {
       await deleteInventoryItem(id);
-      toast.success('Item removed');
+      toast.success('تم حذف الصنف');
     } catch (e: any) {
       toast.error(e.message);
     } finally {
@@ -128,7 +128,7 @@ export default function Inventory() {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search inventory…"
+            placeholder="البحث في المخزون…"
             className="w-full pl-9 pr-4 py-2 bg-surface-card border border-surface-border rounded-lg text-sm text-coffee-200 placeholder-coffee-700 focus:outline-none focus:border-coffee-500"
           />
         </div>
@@ -144,12 +144,12 @@ export default function Inventory() {
                   : 'text-coffee-600 hover:text-coffee-300 border border-transparent'
               }`}
             >
-              {c === 'all' ? 'All' : c}
+              {c === 'all' ? 'الكل' : c === 'raw' ? 'خام' : c === 'roasted' ? 'محمص' : 'تغليف'}
             </button>
           ))}
         </div>
 
-        <Button icon={<Plus size={15} />} onClick={openAdd}>Add Item</Button>
+        <Button icon={<Plus size={15} />} onClick={openAdd}>إضافة صنف</Button>
       </div>
 
       {/* Summary cards */}
@@ -160,11 +160,11 @@ export default function Inventory() {
               {CATEGORY_LABELS[category]}
             </p>
             <p className="text-coffee-100 text-2xl font-bold">{total.toFixed(1)}</p>
-            <p className="text-coffee-600 text-xs mt-0.5">{catItems.length} items tracked</p>
+            <p className="text-coffee-600 text-xs mt-0.5">{catItems.length} صنف مُتتبَّع</p>
             {catItems.some((i) => i.quantity <= i.lowStockThreshold) && (
               <div className="flex items-center gap-1 mt-2 text-amber-400 text-xs">
                 <AlertTriangle size={12} />
-                <span>Low stock alert</span>
+                <span>تنبيه مخزون منخفض</span>
               </div>
             )}
           </div>
@@ -173,13 +173,13 @@ export default function Inventory() {
 
       {/* Items table per category */}
       {loading ? (
-        <div className="text-center py-20 text-coffee-600">Loading inventory…</div>
+        <div className="text-center py-20 text-coffee-600">جارٍ التحميل…</div>
       ) : filtered.length === 0 ? (
         <EmptyState
           icon={Package}
-          title="No inventory items"
-          description="Start by adding your first coffee bean or packaging item."
-          action={<Button icon={<Plus size={15} />} onClick={openAdd}>Add First Item</Button>}
+          title="لا توجد أصناف في المخزون"
+          description="ابدأ بإضافة أول صنف من البن أو مستلزمات التغليف."
+          action={<Button icon={<Plus size={15} />} onClick={openAdd}>إضافة أول صنف</Button>}
         />
       ) : (
         grouped.map(({ category, items: catItems }) =>
@@ -193,8 +193,8 @@ export default function Inventory() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-surface-border">
-                      {['Name', 'Origin', 'Quantity', 'Unit', 'Low Stock At', 'Status', 'Actions'].map((h) => (
-                        <th key={h} className={`text-coffee-500 text-xs font-medium py-3 ${h === 'Actions' ? 'pr-5 text-right' : 'pl-5 text-left'}`}>
+                      {['اسم الصنف', 'المصدر / البلد', 'الكمية', 'الوحدة', 'تنبيه عند', 'الحالة', 'الإجراءات'].map((h) => (
+                        <th key={h} className={`text-coffee-500 text-xs font-medium py-3 ${h === 'الإجراءات' ? 'pr-5 text-right' : 'pl-5 text-left'}`}>
                           {h}
                         </th>
                       ))}
@@ -218,10 +218,10 @@ export default function Inventory() {
                             {isLow ? (
                               <Badge variant="warning">
                                 <AlertTriangle size={10} className="mr-1" />
-                                Low Stock
+                                مخزون منخفض
                               </Badge>
                             ) : (
-                              <Badge variant="success">In Stock</Badge>
+                              <Badge variant="success">متوفر</Badge>
                             )}
                           </td>
                           <td className="pr-5 py-3 text-right">
@@ -255,17 +255,17 @@ export default function Inventory() {
       <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        title={editId ? 'Edit Inventory Item' : 'Add Inventory Item'}
+        title={editId ? 'تعديل الصنف' : 'إضافة صنف جديد'}
       >
         <div className="space-y-4">
-          <Input label="Item Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Ethiopian Yirgacheffe" />
+          <Input label="اسم الصنف" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Ethiopian Yirgacheffe" />
           <div className="grid grid-cols-2 gap-4">
-            <Select label="Category" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value as InventoryCategory })}>
-              <option value="raw">Green Beans (Raw)</option>
-              <option value="roasted">Roasted Coffee</option>
-              <option value="packaging">Packaging Materials</option>
+            <Select label="الفئة" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value as InventoryCategory })}>
+              <option value="raw">بن أخضر (خام)</option>
+              <option value="roasted">قهوة محمصة</option>
+              <option value="packaging">مستلزمات التغليف</option>
             </Select>
-            <Select label="Unit" value={form.unit} onChange={(e) => setForm({ ...form, unit: e.target.value })}>
+            <Select label="الوحدة" value={form.unit} onChange={(e) => setForm({ ...form, unit: e.target.value })}>
               <option value="kg">kg</option>
               <option value="bag">bag</option>
               <option value="box">box</option>
@@ -273,24 +273,24 @@ export default function Inventory() {
             </Select>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <Input label="Current Quantity" type="number" min="0" step="0.1" value={form.quantity} onChange={(e) => setForm({ ...form, quantity: e.target.value })} />
-            <Input label="Low Stock Alert At" type="number" min="0" step="0.1" value={form.lowStockThreshold} onChange={(e) => setForm({ ...form, lowStockThreshold: e.target.value })} />
+            <Input label="الكمية الحالية" type="number" min="0" step="0.1" value={form.quantity} onChange={(e) => setForm({ ...form, quantity: e.target.value })} />
+            <Input label="تنبيه المخزون المنخفض عند" type="number" min="0" step="0.1" value={form.lowStockThreshold} onChange={(e) => setForm({ ...form, lowStockThreshold: e.target.value })} />
           </div>
-          <Input label="Origin / Country (optional)" value={form.origin} onChange={(e) => setForm({ ...form, origin: e.target.value })} placeholder="e.g. Ethiopia" />
-          <Textarea label="Notes (optional)" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
+          <Input label="المصدر (اختياري)" value={form.origin} onChange={(e) => setForm({ ...form, origin: e.target.value })} placeholder="e.g. Ethiopia" />
+          <Textarea label="ملاحظات (اختياري)" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
           <div className="flex justify-end gap-3 pt-2">
-            <Button variant="secondary" onClick={() => setModalOpen(false)}>Cancel</Button>
-            <Button loading={saving} onClick={handleSave}>{editId ? 'Save Changes' : 'Add Item'}</Button>
+            <Button variant="secondary" onClick={() => setModalOpen(false)}>إلغاء</Button>
+            <Button loading={saving} onClick={handleSave}>{editId ? 'حفظ التغييرات' : 'إضافة صنف'}</Button>
           </div>
         </div>
       </Modal>
 
       {/* Delete confirmation */}
-      <Modal open={!!deleteId} onClose={() => setDeleteId(null)} title="Delete Item" size="sm">
-        <p className="text-coffee-300 mb-6">Are you sure you want to remove this item from inventory? This action cannot be undone.</p>
+      <Modal open={!!deleteId} onClose={() => setDeleteId(null)} title="حذف الصنف" size="sm">
+        <p className="text-coffee-300 mb-6">هل أنت متأكد من حذف هذا الصنف؟ لا يمكن التراجع عن هذا الإجراء.</p>
         <div className="flex justify-end gap-3">
-          <Button variant="secondary" onClick={() => setDeleteId(null)}>Cancel</Button>
-          <Button variant="danger" onClick={() => deleteId && handleDelete(deleteId)}>Delete</Button>
+          <Button variant="secondary" onClick={() => setDeleteId(null)}>إلغاء</Button>
+          <Button variant="danger" onClick={() => deleteId && handleDelete(deleteId)}>حذف</Button>
         </div>
       </Modal>
     </div>

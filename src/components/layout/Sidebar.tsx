@@ -8,23 +8,22 @@ import {
   Users,
   ShoppingCart,
   FileText,
-  Settings,
   LogOut,
-  ChevronLeft,
   ChevronRight,
+  ChevronLeft,
   Coffee,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import toast from 'react-hot-toast';
 
 const navItems = [
-  { to: '/',          label: 'Dashboard',  icon: LayoutDashboard },
-  { to: '/inventory', label: 'Inventory',  icon: Package },
-  { to: '/supply',    label: 'Supply',     icon: Truck },
-  { to: '/roasting',  label: 'Roasting',   icon: Flame },
-  { to: '/clients',   label: 'Clients',    icon: Users },
-  { to: '/orders',    label: 'Orders',     icon: ShoppingCart },
-  { to: '/invoices',  label: 'Invoices',   icon: FileText },
+  { to: '/',          label: 'لوحة التحكم', icon: LayoutDashboard },
+  { to: '/inventory', label: 'المخزون',      icon: Package         },
+  { to: '/supply',    label: 'التوريد',      icon: Truck           },
+  { to: '/roasting',  label: 'التحميص',     icon: Flame           },
+  { to: '/clients',   label: 'العملاء',      icon: Users           },
+  { to: '/orders',    label: 'الطلبات',      icon: ShoppingCart    },
+  { to: '/invoices',  label: 'الفواتير',     icon: FileText        },
 ];
 
 export default function Sidebar() {
@@ -37,13 +36,13 @@ export default function Sidebar() {
       await signOut();
       navigate('/login');
     } catch {
-      toast.error('Failed to sign out');
+      toast.error('فشل تسجيل الخروج');
     }
   };
 
   return (
     <aside
-      className={`relative flex flex-col bg-coffee-950 border-r border-surface-border transition-all duration-300 ${
+      className={`relative flex flex-col bg-coffee-950 border-l border-surface-border transition-all duration-300 ${
         collapsed ? 'w-16' : 'w-60'
       }`}
     >
@@ -55,8 +54,8 @@ export default function Sidebar() {
         {!collapsed && (
           <div className="overflow-hidden">
             <p className="text-coffee-300 font-bold text-lg leading-tight">0%</p>
-            <p className="text-coffee-600 text-[10px] font-medium tracking-widest uppercase">
-              Coffee
+            <p className="text-coffee-600 text-[10px] font-medium tracking-widest">
+              قهوة بريميوم
             </p>
           </div>
         )}
@@ -84,22 +83,22 @@ export default function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-surface-border p-2 space-y-0.5">
+      <div className="border-t border-surface-border p-2">
         <button
           onClick={handleSignOut}
           className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-coffee-600 hover:bg-red-900/20 hover:text-red-400 transition-all"
         >
           <LogOut size={18} className="flex-shrink-0" />
-          {!collapsed && <span>Sign Out</span>}
+          {!collapsed && <span>تسجيل الخروج</span>}
         </button>
       </div>
 
-      {/* Collapse toggle */}
+      {/* Collapse toggle — on the LEFT edge (interior) because sidebar is on RIGHT in RTL */}
       <button
         onClick={() => setCollapsed(!collapsed)}
-        className="absolute -right-3 top-20 w-6 h-6 rounded-full bg-surface-border border border-coffee-800 text-coffee-400 flex items-center justify-center hover:bg-coffee-800 transition-colors z-10"
+        className="absolute -left-3 top-20 w-6 h-6 rounded-full bg-surface-border border border-coffee-800 text-coffee-400 flex items-center justify-center hover:bg-coffee-800 transition-colors z-10"
       >
-        {collapsed ? <ChevronRight size={12} /> : <ChevronLeft size={12} />}
+        {collapsed ? <ChevronLeft size={12} /> : <ChevronRight size={12} />}
       </button>
     </aside>
   );

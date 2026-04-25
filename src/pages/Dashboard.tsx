@@ -91,9 +91,9 @@ export default function Dashboard() {
 
   // Stock distribution for pie chart
   const pieData = [
-    { name: 'Raw Beans',   value: rawStockKg },
-    { name: 'Roasted',     value: roastedStockKg },
-    { name: 'Packaging',   value: packagingCount },
+    { name: 'بن أخضر',   value: rawStockKg },
+    { name: 'محمص',     value: roastedStockKg },
+    { name: 'تغليف',   value: packagingCount },
   ].filter((d) => d.value > 0);
 
   // Build trend data from real monthly order/batch activity
@@ -121,12 +121,11 @@ export default function Dashboard() {
         <div className="flex items-center gap-3 px-4 py-3 bg-amber-900/20 border border-amber-700/30 rounded-xl">
           <AlertTriangle size={18} className="text-amber-400 flex-shrink-0" />
           <p className="text-amber-300 text-sm">
-            <span className="font-semibold">{lowStockItems.length} item{lowStockItems.length > 1 ? 's' : ''}</span>{' '}
-            running low:{' '}
+            <span className="font-semibold">{lowStockItems.length} صنف/أصناف مخزونها منخفض</span>{' '}
             {lowStockItems.map((i) => i.name).join(', ')}
           </p>
           <Link to="/inventory" className="ml-auto text-amber-400 hover:text-amber-300 flex items-center gap-1 text-xs font-medium flex-shrink-0">
-            View <ArrowRight size={12} />
+            عرض <ArrowRight size={12} />
           </Link>
         </div>
       )}
@@ -134,35 +133,35 @@ export default function Dashboard() {
       {/* Stats row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
-          label="Raw Beans Stock"
+          label="مخزون البن الأخضر"
           value={rawStockKg.toFixed(1)}
           unit="kg"
           icon={Package}
           color="gold"
-          sublabel={`${inventory.filter((i) => i.category === 'raw').length} varieties`}
+          sublabel={`${inventory.filter((i) => i.category === 'raw').length} أنواع`}
         />
         <StatCard
-          label="Roasted Stock"
+          label="مخزون المحمص"
           value={roastedStockKg.toFixed(1)}
           unit="kg"
           icon={Coffee}
           color="amber"
-          sublabel="Ready to sell"
+          sublabel="جاهز للبيع"
         />
         <StatCard
-          label="Active Orders"
+          label="الطلبات النشطة"
           value={activeOrders}
           icon={ShoppingCart}
           color="blue"
-          sublabel="Pending / In-transit"
+          sublabel="قيد التنفيذ"
         />
         <StatCard
-          label="Monthly Revenue"
+          label="الإيراد الشهري"
           value={monthlyRevenue.toLocaleString()}
           unit="USD"
           icon={DollarSign}
           color="green"
-          sublabel={`Unpaid: $${unpaidInvoices.toLocaleString()}`}
+          sublabel={`غير مدفوع: $${unpaidInvoices.toLocaleString()}`}
         />
       </div>
 
@@ -171,8 +170,8 @@ export default function Dashboard() {
         {/* Area chart */}
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Inventory Trend</CardTitle>
-            <span className="text-coffee-600 text-xs">Last 7 months</span>
+            <CardTitle>اتجاه المخزون</CardTitle>
+            <span className="text-coffee-600 text-xs">آخر 7 أشهر</span>
           </CardHeader>
           <CardBody>
             <ResponsiveContainer width="100%" height={200}>
@@ -191,8 +190,8 @@ export default function Dashboard() {
                 <XAxis dataKey="month" tick={{ fill: '#9C6A30', fontSize: 11 }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fill: '#9C6A30', fontSize: 11 }} axisLine={false} tickLine={false} />
                 <Tooltip content={<CustomTooltip />} />
-                <Area type="monotone" dataKey="raw"     name="Raw"     stroke="#D4A843" fill="url(#gradRaw)"     strokeWidth={2} />
-                <Area type="monotone" dataKey="roasted" name="Roasted" stroke="#7C5A14" fill="url(#gradRoasted)" strokeWidth={2} />
+                <Area type="monotone" dataKey="raw"     name="خام"     stroke="#D4A843" fill="url(#gradRaw)"     strokeWidth={2} />
+                <Area type="monotone" dataKey="roasted" name="محمص" stroke="#7C5A14" fill="url(#gradRoasted)" strokeWidth={2} />
               </AreaChart>
             </ResponsiveContainer>
           </CardBody>
@@ -201,7 +200,7 @@ export default function Dashboard() {
         {/* Pie chart */}
         <Card>
           <CardHeader>
-            <CardTitle>Stock Distribution</CardTitle>
+            <CardTitle>توزيع المخزون</CardTitle>
           </CardHeader>
           <CardBody className="flex flex-col items-center">
             {pieData.length > 0 ? (
@@ -242,7 +241,7 @@ export default function Dashboard() {
               </>
             ) : (
               <div className="flex flex-col items-center justify-center h-32 text-coffee-600 text-sm">
-                No stock data yet
+                لا توجد بيانات مخزون
               </div>
             )}
           </CardBody>
@@ -254,22 +253,22 @@ export default function Dashboard() {
         {/* Recent orders */}
         <Card>
           <CardHeader>
-            <CardTitle>Recent Orders</CardTitle>
+            <CardTitle>آخر الطلبات</CardTitle>
             <Link to="/orders" className="text-coffee-400 hover:text-coffee-300 text-xs flex items-center gap-1">
-              View all <ArrowRight size={12} />
+              عرض الكل <ArrowRight size={12} />
             </Link>
           </CardHeader>
           <CardBody className="p-0">
             {orders.length === 0 ? (
-              <div className="py-10 text-center text-coffee-600 text-sm">No orders yet</div>
+              <div className="py-10 text-center text-coffee-600 text-sm">لا توجد طلبات</div>
             ) : (
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-surface-border">
-                    <th className="text-left text-coffee-500 text-xs font-medium px-5 py-2.5">Order</th>
-                    <th className="text-left text-coffee-500 text-xs font-medium px-2 py-2.5">Client</th>
-                    <th className="text-right text-coffee-500 text-xs font-medium px-5 py-2.5">Total</th>
-                    <th className="text-right text-coffee-500 text-xs font-medium px-5 py-2.5">Status</th>
+                    <th className="text-left text-coffee-500 text-xs font-medium px-5 py-2.5">الطلب</th>
+                    <th className="text-left text-coffee-500 text-xs font-medium px-2 py-2.5">العميل</th>
+                    <th className="text-right text-coffee-500 text-xs font-medium px-5 py-2.5">الإجمالي</th>
+                    <th className="text-right text-coffee-500 text-xs font-medium px-5 py-2.5">الحالة</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -294,22 +293,22 @@ export default function Dashboard() {
         {/* Recent roasting batches */}
         <Card>
           <CardHeader>
-            <CardTitle>Recent Roasting</CardTitle>
+            <CardTitle>آخر دُفعات التحميص</CardTitle>
             <Link to="/roasting" className="text-coffee-400 hover:text-coffee-300 text-xs flex items-center gap-1">
-              View all <ArrowRight size={12} />
+              عرض الكل <ArrowRight size={12} />
             </Link>
           </CardHeader>
           <CardBody className="p-0">
             {batches.length === 0 ? (
-              <div className="py-10 text-center text-coffee-600 text-sm">No batches yet</div>
+              <div className="py-10 text-center text-coffee-600 text-sm">لا توجد دُفعات</div>
             ) : (
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-surface-border">
-                    <th className="text-left text-coffee-500 text-xs font-medium px-5 py-2.5">Batch</th>
-                    <th className="text-left text-coffee-500 text-xs font-medium px-2 py-2.5">Profile</th>
-                    <th className="text-right text-coffee-500 text-xs font-medium px-2 py-2.5">Raw</th>
-                    <th className="text-right text-coffee-500 text-xs font-medium px-5 py-2.5">Roasted</th>
+                    <th className="text-left text-coffee-500 text-xs font-medium px-5 py-2.5">الدُفعة</th>
+                    <th className="text-left text-coffee-500 text-xs font-medium px-2 py-2.5">البروفايل</th>
+                    <th className="text-right text-coffee-500 text-xs font-medium px-2 py-2.5">خام</th>
+                    <th className="text-right text-coffee-500 text-xs font-medium px-5 py-2.5">محمص</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -333,10 +332,10 @@ export default function Dashboard() {
       {/* Quick actions */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
-          { to: '/supply',   icon: Truck,         label: 'New Shipment',  color: 'text-blue-400'   },
-          { to: '/roasting', icon: Flame,          label: 'Start Roasting', color: 'text-amber-400' },
-          { to: '/orders',   icon: ShoppingCart,   label: 'New Order',    color: 'text-green-400'  },
-          { to: '/invoices', icon: TrendingUp,     label: 'View Invoices', color: 'text-coffee-300' },
+          { to: '/supply',   icon: Truck,         label: 'شحنة جديدة',  color: 'text-blue-400'   },
+          { to: '/roasting', icon: Flame,          label: 'بدء التحميص', color: 'text-amber-400' },
+          { to: '/orders',   icon: ShoppingCart,   label: 'طلب جديد',    color: 'text-green-400'  },
+          { to: '/invoices', icon: TrendingUp,     label: 'عرض الفواتير', color: 'text-coffee-300' },
         ].map(({ to, icon: Icon, label, color }) => (
           <Link
             key={to}

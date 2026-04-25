@@ -46,9 +46,9 @@ export default function Supply() {
   };
 
   const handleShipmentSave = async () => {
-    if (!shipForm.supplierId) { toast.error('Select a supplier'); return; }
-    if (!shipForm.inventoryItemId) { toast.error('Select an inventory item'); return; }
-    if (!shipForm.weightKg || !shipForm.costPerKg) { toast.error('Fill in weight and cost'); return; }
+    if (!shipForm.supplierId) { toast.error('اختر موردًا'); return; }
+    if (!shipForm.inventoryItemId) { toast.error('اختر صنفًا من المخزون'); return; }
+    if (!shipForm.weightKg || !shipForm.costPerKg) { toast.error('أدخل الوزن والتكلفة'); return; }
     setSaving(true);
     try {
       const supplier  = suppliers.find((s) => s.id === shipForm.supplierId);
@@ -64,7 +64,7 @@ export default function Supply() {
         date:             new Date(shipForm.date),
         notes:            shipForm.notes,
       });
-      toast.success('Shipment recorded & inventory updated!');
+      toast.success('تم تسجيل الشحنة وتحديث المخزون!');
       setShipmentModal(false);
     } catch (e: any) {
       toast.error(e.message);
@@ -86,15 +86,15 @@ export default function Supply() {
   };
 
   const handleSupplierSave = async () => {
-    if (!supForm.name.trim()) { toast.error('Supplier name required'); return; }
+    if (!supForm.name.trim()) { toast.error('اسم المورد مطلوب'); return; }
     setSaving(true);
     try {
       if (editSupplier) {
         await updateSupplier(editSupplier.id, supForm);
-        toast.success('Supplier updated');
+        toast.success('تم تحديث المورد');
       } else {
         await addSupplier(supForm);
-        toast.success('Supplier added');
+        toast.success('تم إضافة المورد');
       }
       setSupplierModal(false);
     } catch (e: any) {
@@ -107,7 +107,7 @@ export default function Supply() {
   const handleDeleteSupplier = async (id: string) => {
     try {
       await deleteSupplier(id);
-      toast.success('Supplier deleted');
+      toast.success('تم حذف المورد');
     } catch (e: any) {
       toast.error(e.message);
     }
@@ -128,7 +128,7 @@ export default function Supply() {
                 tab === t ? 'bg-coffee-300/15 text-coffee-300' : 'text-coffee-600 hover:text-coffee-300'
               }`}
             >
-              {t === 'shipments' ? 'Shipments' : 'Suppliers'}
+              {t === 'shipments' ? 'الشحنات' : 'الموردون'}
             </button>
           ))}
         </div>
@@ -138,11 +138,11 @@ export default function Supply() {
             <Button icon={<Plus size={15} />} onClick={openNewShipment}
               disabled={suppliers.length === 0 || rawInventory.length === 0}
             >
-              Record Shipment
+              تسجيل شحنة
             </Button>
           )}
           {tab === 'suppliers' && (
-            <Button icon={<Plus size={15} />} onClick={openNewSupplier}>Add Supplier</Button>
+            <Button icon={<Plus size={15} />} onClick={openNewSupplier}>إضافة مورد</Button>
           )}
         </div>
       </div>
@@ -154,8 +154,8 @@ export default function Supply() {
             <div className="flex items-center gap-3 px-4 py-3 bg-blue-900/20 border border-blue-700/30 rounded-xl text-sm text-blue-300">
               <Truck size={16} className="flex-shrink-0" />
               {suppliers.length === 0
-                ? 'Add at least one supplier before recording shipments.'
-                : 'Add at least one raw inventory item before recording shipments.'}
+                ? 'أضف موردًا واحدًا على الأقل قبل تسجيل الشحنات'
+                : 'أضف صنفًا خامًا في المخزون قبل تسجيل الشحنات'}
             </div>
           )}
 
@@ -164,22 +164,22 @@ export default function Supply() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search shipments…"
+              placeholder="البحث في الشحنات…"
               className="w-full pl-9 pr-4 py-2 bg-surface-card border border-surface-border rounded-lg text-sm text-coffee-200 placeholder-coffee-700 focus:outline-none focus:border-coffee-500"
             />
           </div>
 
           {loading ? (
-            <div className="text-center py-20 text-coffee-600">Loading…</div>
+            <div className="text-center py-20 text-coffee-600">جارٍ التحميل…</div>
           ) : filteredShipments.length === 0 ? (
-            <EmptyState icon={Truck} title="No shipments recorded" description="Record your first incoming coffee shipment." action={<Button icon={<Plus size={15} />} onClick={openNewShipment} disabled={suppliers.length === 0 || rawInventory.length === 0}>Record Shipment</Button>} />
+            <EmptyState icon={Truck} title="لا توجد شحنات مسجلة" description="سجّل أول شحنة قهوة واردة." action={<Button icon={<Plus size={15} />} onClick={openNewShipment} disabled={suppliers.length === 0 || rawInventory.length === 0}>تسجيل شحنة</Button>} />
           ) : (
             <Card>
               <CardBody className="p-0 overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-surface-border">
-                      {['Date', 'Supplier', 'Item', 'Weight', 'Cost/kg', 'Total Cost', 'Currency'].map((h) => (
+                      {['التاريخ', 'المورد', 'الصنف', 'الوزن', 'التكلفة/كجم', 'التكلفة الإجمالية', 'العملة'].map((h) => (
                         <th key={h} className="text-left text-coffee-500 text-xs font-medium px-5 py-3">{h}</th>
                       ))}
                     </tr>
@@ -209,7 +209,7 @@ export default function Supply() {
       {/* ── SUPPLIERS ──────────────────────────────────────────────────────── */}
       {tab === 'suppliers' && (
         suppliers.length === 0 ? (
-          <EmptyState icon={Building2} title="No suppliers yet" description="Add your coffee bean suppliers to start recording shipments." action={<Button icon={<Plus size={15} />} onClick={openNewSupplier}>Add First Supplier</Button>} />
+          <EmptyState icon={Building2} title="لا يوجد موردون بعد" description="أضف موردي البن لبدء تسجيل الشحنات." action={<Button icon={<Plus size={15} />} onClick={openNewSupplier}>إضافة أول مورد</Button>} />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {suppliers.map((s) => (
@@ -226,10 +226,10 @@ export default function Supply() {
                   </div>
                   <h3 className="text-coffee-100 font-semibold mb-0.5">{s.name}</h3>
                   <p className="text-coffee-500 text-sm mb-3">{s.country}</p>
-                  {s.contactName && <p className="text-coffee-400 text-xs">Contact: {s.contactName}</p>}
+                  {s.contactName && <p className="text-coffee-400 text-xs">المسؤول: {s.contactName}</p>}
                   {s.email && <p className="text-coffee-600 text-xs">{s.email}</p>}
                   <div className="mt-3 pt-3 border-t border-surface-border">
-                    <p className="text-coffee-500 text-xs">Total Purchased</p>
+                    <p className="text-coffee-500 text-xs">إجمالي المشتريات</p>
                     <p className="text-coffee-300 font-bold text-lg">{s.totalPurchased.toFixed(0)} kg</p>
                   </div>
                 </CardBody>
@@ -240,58 +240,58 @@ export default function Supply() {
       )}
 
       {/* Shipment Modal */}
-      <Modal open={shipmentModal} onClose={() => setShipmentModal(false)} title="Record New Shipment">
+      <Modal open={shipmentModal} onClose={() => setShipmentModal(false)} title="تسجيل شحنة جديدة">
         <div className="space-y-4">
-          <Select label="Supplier" value={shipForm.supplierId} onChange={(e) => setShipForm({ ...shipForm, supplierId: e.target.value })}>
-            <option value="">Select supplier…</option>
+          <Select label="المورد" value={shipForm.supplierId} onChange={(e) => setShipForm({ ...shipForm, supplierId: e.target.value })}>
+            <option value="">اختر موردًا...</option>
             {suppliers.map((s) => <option key={s.id} value={s.id}>{s.name} — {s.country}</option>)}
           </Select>
-          <Select label="Inventory Item (Raw Beans)" value={shipForm.inventoryItemId} onChange={(e) => setShipForm({ ...shipForm, inventoryItemId: e.target.value })}>
-            <option value="">Select item…</option>
+          <Select label="صنف المخزون (بن خام)" value={shipForm.inventoryItemId} onChange={(e) => setShipForm({ ...shipForm, inventoryItemId: e.target.value })}>
+            <option value="">اختر صنفًا...</option>
             {rawInventory.map((i) => <option key={i.id} value={i.id}>{i.name}</option>)}
           </Select>
           <div className="grid grid-cols-2 gap-4">
-            <Input label="Weight (kg)" type="number" min="0" step="0.1" value={shipForm.weightKg} onChange={(e) => setShipForm({ ...shipForm, weightKg: e.target.value })} />
-            <Input label="Cost per kg" type="number" min="0" step="0.01" value={shipForm.costPerKg} onChange={(e) => setShipForm({ ...shipForm, costPerKg: e.target.value })} />
+            <Input label="الوزن (كجم)" type="number" min="0" step="0.1" value={shipForm.weightKg} onChange={(e) => setShipForm({ ...shipForm, weightKg: e.target.value })} />
+            <Input label="التكلفة لكل كجم" type="number" min="0" step="0.01" value={shipForm.costPerKg} onChange={(e) => setShipForm({ ...shipForm, costPerKg: e.target.value })} />
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <Select label="Currency" value={shipForm.currency} onChange={(e) => setShipForm({ ...shipForm, currency: e.target.value })}>
+            <Select label="العملة" value={shipForm.currency} onChange={(e) => setShipForm({ ...shipForm, currency: e.target.value })}>
               <option value="USD">USD</option>
               <option value="EUR">EUR</option>
               <option value="SAR">SAR</option>
               <option value="AED">AED</option>
             </Select>
-            <Input label="Date" type="date" value={shipForm.date} onChange={(e) => setShipForm({ ...shipForm, date: e.target.value })} />
+            <Input label="التاريخ" type="date" value={shipForm.date} onChange={(e) => setShipForm({ ...shipForm, date: e.target.value })} />
           </div>
           {shipForm.weightKg && shipForm.costPerKg && (
             <div className="px-4 py-3 bg-coffee-300/5 border border-coffee-300/15 rounded-lg">
-              <p className="text-coffee-500 text-xs mb-1">Total Cost Preview</p>
+              <p className="text-coffee-500 text-xs mb-1">معاينة التكلفة الإجمالية</p>
               <p className="text-coffee-300 text-xl font-bold">
                 {shipForm.currency} {(parseFloat(shipForm.weightKg) * parseFloat(shipForm.costPerKg)).toLocaleString(undefined, { minimumFractionDigits: 2 })}
               </p>
             </div>
           )}
-          <Textarea label="Notes (optional)" value={shipForm.notes} onChange={(e) => setShipForm({ ...shipForm, notes: e.target.value })} />
+          <Textarea label="ملاحظات (اختياري)" value={shipForm.notes} onChange={(e) => setShipForm({ ...shipForm, notes: e.target.value })} />
           <div className="flex justify-end gap-3 pt-2">
-            <Button variant="secondary" onClick={() => setShipmentModal(false)}>Cancel</Button>
-            <Button loading={saving} onClick={handleShipmentSave}>Record & Update Stock</Button>
+            <Button variant="secondary" onClick={() => setShipmentModal(false)}>إلغاء</Button>
+            <Button loading={saving} onClick={handleShipmentSave}>تسجيل وتحديث المخزون</Button>
           </div>
         </div>
       </Modal>
 
       {/* Supplier Modal */}
-      <Modal open={supplierModal} onClose={() => setSupplierModal(false)} title={editSupplier ? 'Edit Supplier' : 'Add Supplier'}>
+      <Modal open={supplierModal} onClose={() => setSupplierModal(false)} title={editSupplier ? 'تعديل المورد' : 'إضافة مورد'}>
         <div className="space-y-4">
-          <Input label="Company Name" value={supForm.name} onChange={(e) => setSupForm({ ...supForm, name: e.target.value })} placeholder="e.g. Ethiopian Coffee Exports" />
-          <Input label="Country" value={supForm.country} onChange={(e) => setSupForm({ ...supForm, country: e.target.value })} placeholder="e.g. Ethiopia" />
+          <Input label="اسم الشركة" value={supForm.name} onChange={(e) => setSupForm({ ...supForm, name: e.target.value })} placeholder="e.g. Ethiopian Coffee Exports" />
+          <Input label="البلد" value={supForm.country} onChange={(e) => setSupForm({ ...supForm, country: e.target.value })} placeholder="e.g. Ethiopia" />
           <div className="grid grid-cols-2 gap-4">
-            <Input label="Contact Name (optional)" value={supForm.contactName} onChange={(e) => setSupForm({ ...supForm, contactName: e.target.value })} />
-            <Input label="Phone (optional)" value={supForm.phone} onChange={(e) => setSupForm({ ...supForm, phone: e.target.value })} />
+            <Input label="اسم المسؤول (اختياري)" value={supForm.contactName} onChange={(e) => setSupForm({ ...supForm, contactName: e.target.value })} />
+            <Input label="الهاتف (اختياري)" value={supForm.phone} onChange={(e) => setSupForm({ ...supForm, phone: e.target.value })} />
           </div>
-          <Input label="Email (optional)" type="email" value={supForm.email} onChange={(e) => setSupForm({ ...supForm, email: e.target.value })} />
+          <Input label="البريد الإلكتروني (اختياري)" type="email" value={supForm.email} onChange={(e) => setSupForm({ ...supForm, email: e.target.value })} />
           <div className="flex justify-end gap-3 pt-2">
-            <Button variant="secondary" onClick={() => setSupplierModal(false)}>Cancel</Button>
-            <Button loading={saving} onClick={handleSupplierSave}>{editSupplier ? 'Save Changes' : 'Add Supplier'}</Button>
+            <Button variant="secondary" onClick={() => setSupplierModal(false)}>إلغاء</Button>
+            <Button loading={saving} onClick={handleSupplierSave}>{editSupplier ? 'حفظ التغييرات' : 'إضافة مورد'}</Button>
           </div>
         </div>
       </Modal>

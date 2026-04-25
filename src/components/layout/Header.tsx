@@ -4,19 +4,19 @@ import { Bell, Search } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
 const routeTitles: Record<string, string> = {
-  '/':          'Dashboard',
-  '/inventory': 'Inventory',
-  '/supply':    'Supply & Shipments',
-  '/roasting':  'Roasting Batches',
-  '/clients':   'Client Accounts',
-  '/orders':    'Sales & Orders',
-  '/invoices':  'Invoices',
+  '/':          'لوحة التحكم',
+  '/inventory': 'المخزون',
+  '/supply':    'التوريد والشحنات',
+  '/roasting':  'دُفعات التحميص',
+  '/clients':   'حسابات العملاء',
+  '/orders':    'المبيعات والطلبات',
+  '/invoices':  'الفواتير',
 };
 
 export default function Header() {
   const { pathname } = useLocation();
   const { user }     = useAuth();
-  const title        = routeTitles[pathname] ?? 'Dashboard';
+  const title        = routeTitles[pathname] ?? 'لوحة التحكم';
 
   const initials = user?.email
     ? user.email.slice(0, 2).toUpperCase()
@@ -28,10 +28,10 @@ export default function Header() {
 
       <div className="flex items-center gap-3">
         <div className="relative hidden sm:block">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-coffee-600" />
+          <Search size={15} className="absolute right-3 top-1/2 -translate-y-1/2 text-coffee-600" />
           <input
-            placeholder="Quick search…"
-            className="pl-9 pr-4 py-1.5 bg-surface-card border border-surface-border rounded-lg text-sm text-coffee-200 placeholder-coffee-700 focus:outline-none focus:border-coffee-500 w-52"
+            placeholder="بحث سريع…"
+            className="pr-9 pl-4 py-1.5 bg-surface-card border border-surface-border rounded-lg text-sm text-coffee-200 placeholder-coffee-700 focus:outline-none focus:border-coffee-500 w-52"
           />
         </div>
 
