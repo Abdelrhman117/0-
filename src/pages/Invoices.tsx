@@ -14,16 +14,18 @@ import EmptyState from '../components/ui/EmptyState';
 import toast from 'react-hot-toast';
 
 const statusIcons: Record<InvoiceStatus, React.ReactNode> = {
-  paid:    <CheckCircle size={14} className="text-green-400" />,
-  partial: <Clock size={14} className="text-amber-400" />,
-  unpaid:  <AlertCircle size={14} className="text-red-400" />,
+  paid:      <CheckCircle size={14} className="text-green-400" />,
+  partial:   <Clock size={14} className="text-amber-400" />,
+  unpaid:    <AlertCircle size={14} className="text-red-400" />,
+  cancelled: <AlertCircle size={14} className="text-coffee-600" />,
 };
 
 const statusLabels: Record<InvoiceStatus | 'all', string> = {
-  all:     'الكل',
-  paid:    'مدفوعة',
-  partial: 'جزئي',
-  unpaid:  'غير مدفوعة',
+  all:       'الكل',
+  paid:      'مدفوعة',
+  partial:   'جزئي',
+  unpaid:    'غير مدفوعة',
+  cancelled: 'ملغية',
 };
 
 export default function Invoices() {
@@ -103,7 +105,7 @@ export default function Invoices() {
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="البحث في الفواتير…" className="w-full pr-9 pl-4 py-2 bg-surface-card border border-surface-border rounded-lg text-sm text-coffee-200 placeholder-coffee-700 focus:outline-none focus:border-coffee-500" />
         </div>
         <div className="flex gap-1.5">
-          {(['all', 'unpaid', 'partial', 'paid'] as const).map((s) => (
+          {(['all', 'unpaid', 'partial', 'paid', 'cancelled'] as const).map((s) => (
             <button key={s} onClick={() => setStatusFilter(s)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${statusFilter === s ? 'bg-coffee-300/15 text-coffee-300 border border-coffee-300/20' : 'text-coffee-600 hover:text-coffee-300 border border-transparent'}`}>
               {statusLabels[s]}
             </button>
@@ -163,7 +165,7 @@ export default function Invoices() {
                           <button onClick={() => handlePDFDownload(inv)} className="p-1.5 rounded-lg text-coffee-600 hover:text-blue-400 hover:bg-blue-900/20 transition-colors" title="تحميل PDF">
                             <Download size={14} />
                           </button>
-                          {inv.status !== 'paid' && (
+                          {inv.status !== 'paid' && inv.status !== 'cancelled' && (
                             <button onClick={() => { setPayModal(inv); setPayAmount(''); }} className="p-1.5 rounded-lg text-coffee-600 hover:text-green-400 hover:bg-green-900/20 transition-colors" title="تسجيل دفعة">
                               <DollarSign size={14} />
                             </button>
@@ -238,7 +240,7 @@ export default function Invoices() {
             {/* Action buttons */}
             <div className="flex gap-3 pt-2 border-t border-surface-border">
               <Button variant="secondary" icon={<Download size={14} />} onClick={() => handlePDFDownload(selectedInvoice)}>تحميل PDF</Button>
-              {selectedInvoice.status !== 'paid' && (
+              {selectedInvoice.status !== 'paid' && selectedInvoice.status !== 'cancelled' && (
                 <Button icon={<DollarSign size={14} />} onClick={() => { setPayModal(selectedInvoice); setSelectedInvoice(null); setPayAmount(''); }}>
                   تسجيل دفعة
                 </Button>

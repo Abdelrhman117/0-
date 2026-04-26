@@ -4,7 +4,7 @@ import { orderBy } from 'firebase/firestore';
 import { format } from 'date-fns';
 import { useCollection } from '../hooks/useRealtimeData';
 import { Order, OrderItem, Client, InventoryItem, OrderStatus } from '../types';
-import { createOrder, updateOrderStatus } from '../services/orderService';
+import { createOrder, updateOrderStatus, cancelOrder } from '../services/orderService';
 import { Card, CardHeader, CardTitle, CardBody } from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Badge, { statusBadgeVariant } from '../components/ui/Badge';
@@ -105,8 +105,15 @@ export default function Orders() {
 
   const handleStatusChange = async (orderId: string, status: OrderStatus) => {
     try {
-      await updateOrderStatus(orderId, status);
-      toast.success(`تم تحديث حالة الطلب إلى: ${statusLabels[status] ?? status}`);
+      if (status === 'cancelled') {
+        const order = orders.find((o) => o.id === orderId);
+        if (!order) return;
+        await cancelOrder(order);
+        toast.success('تم إلغاء الطلب وإعادة المخزون');
+      } else {
+        await updateOrderStatus(orderId, status);
+        toast.success(`تم تحديث حالة الطلب إلى: ${statusLabels[status] ?? status}`);
+      }
     } catch (e: any) {
       toast.error(e.message);
     }

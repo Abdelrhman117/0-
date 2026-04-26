@@ -112,7 +112,7 @@ export interface Order {
 }
 
 // ─── Invoices ─────────────────────────────────────────────────────────────────
-export type InvoiceStatus = 'unpaid' | 'partial' | 'paid';
+export type InvoiceStatus = 'unpaid' | 'partial' | 'paid' | 'cancelled';
 
 export interface Invoice {
   id: string;

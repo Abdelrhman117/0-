@@ -3,11 +3,15 @@ import {
   doc,
   addDoc,
   updateDoc,
+  getDocs,
+  query,
+  where,
   serverTimestamp,
   Timestamp,
+  increment,
 } from 'firebase/firestore';
 import { db } from '../firebase';
-import { OrderItem, OrderStatus, ClientType } from '../types';
+import { Order, OrderItem, OrderStatus, ClientType } from '../types';
 import { adjustStock } from './inventoryService';
 import { updateClientAfterOrder } from './clientService';
 
@@ -83,4 +87,43 @@ export async function createOrder(data: {
 
 export async function updateOrderStatus(id: string, status: OrderStatus) {
   return updateDoc(doc(db, 'orders', id), { status });
+}
+
+export async function cancelOrder(order: Order) {
+  // 1. Mark order cancelled
+  await updateDoc(doc(db, 'orders', order.id), { status: 'cancelled' });
+
+  // 2. Restore inventory stock for every item
+  await Promise.all(
+    order.items.map((item) => adjustStock(item.inventoryItemId, item.quantityKg)),
+  );
+
+  // 3. Find the linked invoice and reverse client balance
+  const invSnap = await getDocs(
+    query(collection(db, 'invoices'), where('orderId', '==', order.id)),
+  );
+
+  await Promise.all(
+    invSnap.docs.map(async (invDoc) => {
+      const inv = invDoc.data();
+      const unpaidBalance = inv.balance ?? 0;
+
+      // Cancel the invoice
+      await updateDoc(invDoc.ref, { status: 'cancelled', balance: 0 });
+
+      // Reverse only the outstanding (unpaid) portion from client balance
+      if (unpaidBalance > 0) {
+        await updateDoc(doc(db, 'clients', order.clientId), {
+          balance: increment(-unpaidBalance),
+        });
+      }
+    }),
+  );
+
+  // 4. Reverse order count and volume on the client
+  const totalKg = order.items.reduce((s, i) => s + i.quantityKg, 0);
+  await updateDoc(doc(db, 'clients', order.clientId), {
+    totalOrders:   increment(-1),
+    totalVolumeKg: increment(-totalKg),
+  });
 }
