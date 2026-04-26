@@ -265,12 +265,25 @@ export default function Inventory() {
               <option value="roasted">قهوة محمصة</option>
               <option value="packaging">مستلزمات التغليف</option>
             </Select>
-            <Select label="الوحدة" value={form.unit} onChange={(e) => setForm({ ...form, unit: e.target.value })}>
-              <option value="kg">kg</option>
-              <option value="bag">bag</option>
-              <option value="box">box</option>
-              <option value="unit">unit</option>
-            </Select>
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-medium text-coffee-400 uppercase tracking-wider">الوحدة</label>
+              <input
+                list="unit-suggestions"
+                value={form.unit}
+                onChange={(e) => setForm({ ...form, unit: e.target.value })}
+                placeholder="كجم، طن، كيس، كرتون…"
+                className="w-full px-3 py-2 bg-coffee-950 border border-surface-border rounded-lg text-sm text-coffee-100 placeholder-coffee-700 focus:outline-none focus:border-coffee-500 focus:ring-1 focus:ring-coffee-500/30 transition-colors"
+              />
+              <datalist id="unit-suggestions">
+                <option value="كجم"/>
+                <option value="طن"/>
+                <option value="جرام"/>
+                <option value="كيس"/>
+                <option value="كرتون"/>
+                <option value="علبة"/>
+                <option value="وحدة"/>
+              </datalist>
+            </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input label="الكمية الحالية" type="number" min="0" step="0.1" value={form.quantity} onChange={(e) => setForm({ ...form, quantity: e.target.value })} />

@@ -51,9 +51,8 @@ export default function Invoices() {
   const handlePDFDownload = (inv: Invoice) => {
     try {
       generateInvoicePDF(inv);
-      toast.success('تم تحميل ملف PDF');
     } catch (e: any) {
-      toast.error('فشل إنشاء PDF: ' + e.message);
+      toast.error(e.message);
     }
   };
 
